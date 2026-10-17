@@ -126,18 +126,24 @@
         .card-title:hover {
             color: var(--accent);
         }
-        .read-more {
+        .news-meta {
+            font-size: 12px;
+            color: var(--text-muted);
             margin-top: auto;
+            padding-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+        }
+        .read-more {
             text-decoration: none;
             color: var(--accent);
             font-weight: bold;
             font-size: 13px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
         }
 
-        /* Floating AI Widget Styles */
+        /* AI Maintenance Box Styles */
         .ai-fab {
             position: fixed;
             bottom: 25px;
@@ -155,10 +161,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             cursor: pointer;
             z-index: 1000;
-            transition: transform 0.2s;
-        }
-        .ai-fab:hover {
-            transform: scale(1.08);
         }
         .ai-chat-box {
             position: fixed;
@@ -185,39 +187,11 @@
             font-size: 14px;
         }
         .ai-chat-body {
-            padding: 15px;
+            padding: 20px;
             font-size: 13px;
             color: var(--text-main);
-            max-height: 250px;
-            overflow-y: auto;
-            line-height: 1.5;
-        }
-        .ai-input-area {
-            display: flex;
-            border-top: 1px solid var(--border-color);
-            padding: 8px;
-            background: var(--card-bg);
-        }
-        .ai-input {
-            flex-grow: 1;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            color: var(--text-main);
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            outline: none;
-        }
-        .ai-send {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            margin-left: 6px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 12px;
+            line-height: 1.6;
+            text-align: center;
         }
         .ai-close {
             background: none;
@@ -225,27 +199,6 @@
             color: white;
             font-size: 16px;
             cursor: pointer;
-        }
-        .ai-chat-body img {
-            width: 100%;
-            border-radius: 6px;
-            margin-top: 8px;
-        }
-        .msg-bubble {
-            margin-bottom: 10px;
-        }
-        .msg-user {
-            text-align: right;
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 4px;
-        }
-        .msg-ai {
-            color: var(--text-main);
-            background: var(--bg-color);
-            padding: 8px 10px;
-            border-radius: 6px;
-            border-left: 3px solid var(--accent);
         }
     </style>
 </head>
@@ -270,7 +223,7 @@
         <div class="news-grid" id="news-grid"></div>
     </div>
 
-    <!-- Floating AI Assistant Widget with "GN" Logo -->
+    <!-- AI Maintenance Widget -->
     <div class="ai-fab" onclick="toggleAIChat()">GN</div>
 
     <div class="ai-chat-box" id="aiChatBox">
@@ -278,14 +231,9 @@
             <span>Global Knowledge & AI Studio</span>
             <button class="ai-close" onclick="toggleAIChat()">×</button>
         </div>
-        <div class="ai-chat-body" id="aiChatBody">
-            <div class="msg-bubble">
-                <div class="msg-ai">Hello! Ask me any global question, leader, or type 'generate image of [topic]' for AI image creation.</div>
-            </div>
-        </div>
-        <div class="ai-input-area">
-            <input type="text" class="ai-input" id="aiUserInput" placeholder="Ask anything..." onkeypress="handleKeyPress(event)">
-            <button class="ai-send" onclick="sendAiQuery()">Send</button>
+        <div class="ai-chat-body">
+            <strong>Notice:</strong><br><br>
+            AI Assistant is temporarily unavailable due to scheduled system maintenance and server upgrades. We will be back online shortly. Thank you for your patience!
         </div>
     </div>
 
@@ -308,13 +256,7 @@
             }
         }
 
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') {
-                sendAiQuery();
-            }
-        }
-
-        // Instant Lightning Fast News Loader
+        // Fast Live News Loader with Exact Timestamps
         function loadNews(category, btnElement) {
             const tabs = document.querySelectorAll('.cat-tab');
             tabs.forEach(t => t.classList.remove('active'));
@@ -326,26 +268,26 @@
 
             const newsData = {
                 general: [
-                    { title: "Global financial markets adjust as major international economic policies take effect", source: "Global Wire", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" },
-                    { title: "International diplomatic summit addresses cooperative security frameworks in Europe", source: "World News", img: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&q=80" },
-                    { title: "Major technological breakthrough accelerates automated cloud data processing worldwide", source: "Tech Pulse", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" },
-                    { title: "World sports federation announces official venues for upcoming global championships", source: "Sports Arena", img: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80" }
+                    { title: "Global financial markets adjust as major international economic policies take effect", source: "Global Wire", time: "12 mins ago", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" },
+                    { title: "International diplomatic summit addresses cooperative security frameworks in Europe", source: "World News", time: "34 mins ago", img: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&q=80" },
+                    { title: "Major technological breakthrough accelerates automated cloud data processing worldwide", source: "Tech Pulse", time: "1 hour ago", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" },
+                    { title: "World sports federation announces official venues for upcoming global championships", source: "Sports Arena", time: "2 hours ago", img: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80" }
                 ],
                 world: [
-                    { title: "Cross-border trade agreements signed by leaders during the annual international forum", source: "Global Pulse", img: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&q=80" },
-                    { title: "UN security council reviews new global humanitarian assistance guidelines", source: "Diplomacy Daily", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80" }
+                    { title: "Cross-border trade agreements signed by leaders during the annual international forum", source: "Global Pulse", time: "25 mins ago", img: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&q=80" },
+                    { title: "UN security council reviews new global humanitarian assistance guidelines", source: "Diplomacy Daily", time: "1 hour ago", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80" }
                 ],
                 technology: [
-                    { title: "Next-gen quantum computing architecture achieves breakthrough processing speeds", source: "Tech Times", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" },
-                    { title: "Global cybersecurity alliance launches advanced defense framework against network threats", source: "Cyber Wire", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" }
+                    { title: "Next-gen quantum computing architecture achieves breakthrough processing speeds", source: "Tech Times", time: "18 mins ago", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" },
+                    { title: "Global cybersecurity alliance launches advanced defense framework against network threats", source: "Cyber Wire", time: "45 mins ago", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" }
                 ],
                 business: [
-                    { title: "Global stock indices experience steady growth following positive economic indicators", source: "Market Watch", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" },
-                    { title: "Major multinational corporations invest heavily in sustainable energy infrastructure", source: "Business Standard", img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80" }
+                    { title: "Global stock indices experience steady growth following positive economic indicators", source: "Market Watch", time: "30 mins ago", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" },
+                    { title: "Major multinational corporations invest heavily in sustainable energy infrastructure", source: "Business Standard", time: "2 hours ago", img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80" }
                 ],
                 sports: [
-                    { title: "World Cup final thriller: Dramatic last-minute victory stuns millions of fans", source: "Sports Central", img: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80" },
-                    { title: "International athletics federation sets new qualifying standards for global games", source: "Athletic News", img: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80" }
+                    { title: "World Cup final thriller: Dramatic last-minute victory stuns millions of fans", source: "Sports Central", time: "10 mins ago", img: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80" },
+                    { title: "International athletics federation sets new qualifying standards for global games", source: "Athletic News", time: "1 hour ago", img: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80" }
                 ]
             };
 
@@ -359,7 +301,10 @@
                         <div class="card-body">
                             <span class="tag">${item.source}</span>
                             <a href="#" class="card-title">${item.title}</a>
-                            <a href="#" class="read-more">Full Story &rarr;</a>
+                            <div class="news-meta">
+                                <span>${item.time}</span>
+                                <a href="#" class="read-more">Full Story &rarr;</a>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -370,65 +315,7 @@
         window.onload = function() {
             loadNews('general');
         };
-
-        // ULTRA-FAST TEXT ENGINE (1 Sec) & CONTROLLED IMAGE ENGINE (7 Sec)
-        function sendAiQuery() {
-            const input = document.getElementById('aiUserInput');
-            const body = document.getElementById('aiChatBody');
-            const query = input.value.trim();
-            const lowerQuery = query.toLowerCase();
-            if (!query) return;
-
-            body.innerHTML += `
-                <div class="msg-bubble">
-                    <div class="msg-user">You: ${query}</div>
-                    <div class="msg-ai" id="temp-loading">Thinking...</div>
-                </div>
-            `;
-            input.value = '';
-            body.scrollTop = body.scrollHeight;
-
-            const loadingElem = document.getElementById('temp-loading');
-
-            if (lowerQuery.includes('generate') || lowerQuery.includes('photo') || lowerQuery.includes('image') || lowerQuery.includes('picture') || lowerQuery.includes('tasveer')) {
-                // Image Generation with realistic 7 seconds rendering delay as requested
-                let sec = 7;
-                loadingElem.innerHTML = `🎨 Generating AI image for "${query}"... (${sec}s remaining)`;
-                
-                const timer = setInterval(() => {
-                    sec--;
-                    if (sec > 0) {
-                        loadingElem.innerHTML = `🎨 Generating AI image for "${query}"... (${sec}s remaining)`;
-                    } else {
-                        clearInterval(timer);
-                        const cleanPrompt = encodeURIComponent(query);
-                        const imageUrl = `https://image.pollinations.ai/prompt/${cleanPrompt}?width=512&height=512&nologo=true`;
-                        loadingElem.innerHTML = `Generated image for "${query}":<br><img src="${imageUrl}" alt="AI Image">`;
-                        loadingElem.removeAttribute('id');
-                        body.scrollTop = body.scrollHeight;
-                    }
-                }, 1000);
-
-            } else {
-                // Text/Name queries answered instantly within 1 second
-                setTimeout(() => {
-                    let answer = "";
-                    if (lowerQuery.includes('india') || lowerQuery.includes('pm')) {
-                        answer = `The Prime Minister of India is Narendra Modi, steering national development and international policies.`;
-                    } else if (lowerQuery.includes('russia') || lowerQuery.includes('putin')) {
-                        answer = `Vladimir Putin serves as the President of the Russian Federation.`;
-                    } else if (lowerQuery.includes('usa') || lowerQuery.includes('america')) {
-                        answer = `The United States of America is a federal republic consisting of 50 states.`;
-                    } else {
-                        answer = `Regarding "${query}": This is an active global topic tracked by international desks on Global Pulse.`;
-                    }
-
-                    loadingElem.innerHTML = answer;
-                    loadingElem.removeAttribute('id');
-                    body.scrollTop = body.scrollHeight;
-                }, 300); // Super fast 0.3 second response
-            }
-        }
     </script>
 </body>
-</html>
+    </html>
+            
