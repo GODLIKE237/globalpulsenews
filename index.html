@@ -6,237 +6,205 @@
     <title>Global Pulse News</title>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --bg-color: #f6f6f6;
             --card-bg: #ffffff;
-            --text-main: #111827;
-            --text-muted: #4b5563;
-            --accent: #4f46e5;
-            --accent-hover: #4338ca;
-            --border: rgba(0, 0, 0, 0.08);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --text-main: #121212;
+            --text-muted: #555555;
+            --border-color: #dcdcdc;
+            --accent: #bb1919; /* BBC style red accent */
         }
         [data-theme="dark"] {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #6366f1;
-            --accent-hover: #818cf8;
-            --border: rgba(255, 255, 255, 0.08);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            --bg-color: #0d0d0d;
+            --card-bg: #161616;
+            --text-main: #f1f1f1;
+            --text-muted: #999999;
+            --border-color: #2a2a2a;
+            --accent: #ff3b3b;
         }
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
+            font-family: Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            min-height: 100vh;
-            transition: background 0.4s ease, color 0.4s ease;
+            transition: background 0.3s, color 0.3s;
         }
+        /* Top BBC-style Header */
         header {
             background-color: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 24px 40px;
+            border-bottom: 4px solid var(--accent);
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
-        .logo h1 {
+        .logo-area h1 {
             margin: 0;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+        .theme-toggle-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        /* Main Container */
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        /* Hero Featured News (Like BBC top story) */
+        .hero-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+        .hero-img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            background-color: #333;
+        }
+        .hero-content {
+            padding: 24px;
+        }
+        .tag {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        .hero-title {
             font-size: 26px;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(90deg, var(--accent), #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            line-height: 1.3;
+            margin: 0 0 12px 0;
         }
-        .theme-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 10px 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            transition: all 0.2s;
-        }
-        .theme-btn:hover {
-            border-color: var(--accent);
-            transform: translateY(-1px);
-        }
-        .nav-cats {
-            max-width: 1200px;
-            margin: 25px auto 0 auto;
-            padding: 0 20px;
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .nav-cats::-webkit-scrollbar {
-            display: none;
-        }
-        .tab-btn {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
+        .hero-desc {
+            font-size: 15px;
             color: var(--text-muted);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 10px 20px;
-            border-radius: 30px;
-            white-space: nowrap;
-            box-shadow: var(--shadow);
-            transition: all 0.25s ease;
+            line-height: 1.5;
+            margin-bottom: 16px;
         }
-        .tab-btn.active, .tab-btn:hover {
-            background-color: var(--accent);
-            color: #ffffff;
-            border-color: var(--accent);
-            transform: translateY(-2px);
+        .meta-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 10px;
         }
-        .main-grid {
-            max-width: 1200px;
-            margin: 25px auto 50px auto;
-            padding: 0 20px;
+        /* Sub News Grid */
+        .news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
         }
         .card {
             background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
+            border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.1);
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #333;
         }
         .card-body {
-            padding: 24px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
-        .source-tag {
-            display: inline-block;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
         .card-title {
             font-size: 18px;
             font-weight: 700;
-            margin: 0 0 16px 0;
-            line-height: 1.5;
+            line-height: 1.35;
+            margin: 0 0 12px 0;
         }
-        .card-date {
-            font-size: 13px;
-            color: var(--text-muted);
+        .read-more {
             margin-top: auto;
-            margin-bottom: 20px;
-        }
-        .read-link {
             text-decoration: none;
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 14px;
+            color: var(--text-main);
+            font-weight: bold;
+            font-size: 13px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: color 0.2s;
+            gap: 5px;
         }
-        .read-link:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
+        .read-more:hover {
+            color: var(--accent);
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">
-            <h1>Global Pulse News</h1>
+        <div class="logo-area">
+            <h1>Global Pulse</h1>
         </div>
-        <button class="theme-btn" onclick="switchTheme()">✨ Theme Mode</button>
+        <button class="theme-toggle-btn" onclick="toggleTheme()">Dark / Light</button>
     </header>
 
-    <div class="nav-cats">
-        <button class="tab-btn active" onclick="filterCategory('all')">All Feeds</button>
-        <button class="tab-btn" onclick="filterCategory('world')">World</button>
-        <button class="tab-btn" onclick="filterCategory('tech')">Technology</button>
-        <button class="tab-btn" onclick="filterCategory('business')">Business</button>
-    </div>
-
-    <div class="main-grid" id="feed-grid">
-        <div class="card" data-cat="world">
-            <div class="card-body">
-                <span class="source-tag">BBC News</span>
-                <h3 class="card-title">Oregon teacher fought school attacker before armed dad shot suspect 'multiple times'</h3>
-                <span class="card-date">October 17, 2026</span>
-                <a href="#" class="read-link">Read Full Article &rarr;</a>
+    <div class="container">
+        <!-- Hero Top News (BBC Style with image) -->
+        <div class="hero-card">
+            <img src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80" alt="News Image" class="hero-img">
+            <div class="hero-content">
+                <span class="tag">World News</span>
+                <h2 class="hero-title">Trump waives several Russia sanctions as row with Zelensky intensifies</h2>
+                <p class="hero-desc">The US president temporarily ends many restrictions on Moscow recently passed by Congress over "national security" concerns.</p>
+                <div class="meta-info">
+                    <span>36 mins ago</span>
+                    <span>•</span>
+                    <span>Europe</span>
+                </div>
             </div>
         </div>
 
-        <div class="card" data-cat="tech">
-            <div class="card-body">
-                <span class="source-tag">Axios</span>
-                <h3 class="card-title">Katie Zacharia out as White House press secretary</h3>
-                <span class="card-date">October 17, 2026</span>
-                <a href="#" class="read-link">Read Full Article &rarr;</a>
+        <!-- Grid News Cards -->
+        <div class="news-grid">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=600&q=80" alt="News" class="card-img">
+                <div class="card-body">
+                    <span class="tag">US & Canada</span>
+                    <h3 class="card-title">Oregon teacher fought school attacker before armed dad shot suspect 'multiple times'</h3>
+                    <div class="meta-info" style="margin-bottom: 12px;">20 mins ago</div>
+                    <a href="#" class="read-more">Full Story &rarr;</a>
+                </div>
             </div>
-        </div>
 
-        <div class="card" data-cat="business">
-            <div class="card-body">
-                <span class="source-tag">The New York Times</span>
-                <h3 class="card-title">Trump Signs Order Exempting Russia From Sanctions Law</h3>
-                <span class="card-date">October 17, 2026</span>
-                <a href="#" class="read-link">Read Full Article &rarr;</a>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" alt="News" class="card-img">
+                <div class="card-body">
+                    <span class="tag">Technology</span>
+                    <h3 class="card-title">Katie Zacharia out as White House press secretary amid major administration shift</h3>
+                    <div class="meta-info" style="margin-bottom: 12px;">1 hour ago</div>
+                    <a href="#" class="read-more">Full Story &rarr;</a>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        function switchTheme() {
-            const rootHtml = document.documentElement;
-            if (rootHtml.getAttribute('data-theme') === 'dark') {
-                rootHtml.removeAttribute('data-theme');
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
             } else {
-                rootHtml.setAttribute('data-theme', 'dark');
+                html.setAttribute('data-theme', 'dark');
             }
-        }
-
-        function filterCategory(cat) {
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            const items = document.querySelectorAll('.card');
-            items.forEach(item => {
-                if (cat === 'all' || item.getAttribute('data-cat') === cat) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
         }
     </script>
 </body>
