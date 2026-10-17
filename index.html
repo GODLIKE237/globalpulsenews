@@ -3,138 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Pulse News - Live Aggregator</title>
+    <title>Global Pulse News</title>
     <style>
         :root {
-            --bg-color: #f4f6f9;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             --card-bg: #ffffff;
-            --text-color: #1a1a1a;
-            --text-secondary: #555555;
-            --accent-color: #0056b3;
-            --border-color: #e0e0e0;
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --accent: #4f46e5;
+            --accent-hover: #4338ca;
+            --border: rgba(0, 0, 0, 0.08);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
         [data-theme="dark"] {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --text-secondary: #aaaaaa;
-            --accent-color: #4da3ff;
-            --border-color: #333333;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --border: rgba(255, 255, 255, 0.08);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
         body {
-            font-family: Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
             margin: 0;
             padding: 0;
-            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
         }
         header {
             background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 20px;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 24px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .logo-container h1 {
+        .logo h1 {
             margin: 0;
-            font-size: 24px;
-            color: var(--accent-color);
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--accent), #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .logo-container p {
-            margin: 5px 0 0 0;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 8px 12px;
-            border-radius: 4px;
+        .theme-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.2s;
         }
-        .categories {
-            display: flex;
-            gap: 10px;
-            padding: 15px 20px;
-            overflow-x: auto;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
+        .theme-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
         }
-        .cat-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-weight: bold;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 20px;
-            white-space: nowrap;
-        }
-        .cat-btn.active, .cat-btn:hover {
-            background-color: var(--accent-color);
-            color: #ffffff;
-        }
-        .container {
+        .nav-cats {
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 25px auto 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .nav-cats::-webkit-scrollbar {
+            display: none;
+        }
+        .tab-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 30px;
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+            transition: all 0.25s ease;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .main-grid {
+            max-width: 1200px;
+            margin: 25px auto 50px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 28px;
         }
-        .news-card {
+        .card {
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .news-card:hover {
-            transform: translateY(-3px);
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.1);
         }
-        .news-content {
-            padding: 15px;
+        .card-body {
+            padding: 24px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
-        .news-source {
+        .source-tag {
+            display: inline-block;
             font-size: 11px;
             text-transform: uppercase;
-            color: var(--accent-color);
-            font-weight: bold;
-            margin-bottom: 8px;
+            letter-spacing: 1px;
+            color: var(--accent);
+            font-weight: 800;
+            margin-bottom: 12px;
         }
-        .news-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 0 10px 0;
-            line-height: 1.4;
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            line-height: 1.5;
         }
-        .news-date {
-            font-size: 12px;
-            color: var(--text-secondary);
+        .card-date {
+            font-size: 13px;
+            color: var(--text-muted);
             margin-top: auto;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-        .read-btn {
+        .read-link {
             text-decoration: none;
-            color: var(--accent-color);
-            font-weight: bold;
+            color: var(--accent);
+            font-weight: 700;
             font-size: 14px;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            transition: color 0.2s;
         }
-        .read-btn:hover {
+        .read-link:hover {
+            color: var(--accent-hover);
             text-decoration: underline;
         }
     </style>
@@ -142,73 +172,69 @@
 <body>
 
     <header>
-        <div class="logo-container">
+        <div class="logo">
             <h1>Global Pulse News</h1>
-            <p>Live Automated Professional News Aggregator</p>
         </div>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+        <button class="theme-btn" onclick="switchTheme()">✨ Theme Mode</button>
     </header>
 
-    <div class="categories">
-        <button class="cat-btn active" onclick="filterNews('all')">All News</button>
-        <button class="cat-btn" onclick="filterNews('world')">World</button>
-        <button class="cat-btn" onclick="filterNews('tech')">Technology</button>
-        <button class="cat-btn" onclick="filterNews('business')">Business</button>
-        <button class="cat-btn" onclick="filterNews('sports')">Sports</button>
+    <div class="nav-cats">
+        <button class="tab-btn active" onclick="filterCategory('all')">All Feeds</button>
+        <button class="tab-btn" onclick="filterCategory('world')">World</button>
+        <button class="tab-btn" onclick="filterCategory('tech')">Technology</button>
+        <button class="tab-btn" onclick="filterCategory('business')">Business</button>
     </div>
 
-    <div class="container" id="news-container">
-        <!-- Dynamic News Cards Example -->
-        <div class="news-card" data-category="world">
-            <div class="news-content">
-                <span class="news-source">BBC News</span>
-                <h3 class="news-title">Oregon teacher fought school attacker before armed dad shot suspect 'multiple times'</h3>
-                <span class="news-date">10/17/2026, 1:19:04 AM</span>
-                <a href="#" class="read-btn">Read Full Article →</a>
+    <div class="main-grid" id="feed-grid">
+        <div class="card" data-cat="world">
+            <div class="card-body">
+                <span class="source-tag">BBC News</span>
+                <h3 class="card-title">Oregon teacher fought school attacker before armed dad shot suspect 'multiple times'</h3>
+                <span class="card-date">October 17, 2026</span>
+                <a href="#" class="read-link">Read Full Article &rarr;</a>
             </div>
         </div>
 
-        <div class="news-card" data-category="tech">
-            <div class="news-content">
-                <span class="news-source">Axios</span>
-                <h3 class="news-title">Katie Zacharia out as White House press secretary</h3>
-                <span class="news-date">10/17/2026, 1:49:51 AM</span>
-                <a href="#" class="read-btn">Read Full Article →</a>
+        <div class="card" data-cat="tech">
+            <div class="card-body">
+                <span class="source-tag">Axios</span>
+                <h3 class="card-title">Katie Zacharia out as White House press secretary</h3>
+                <span class="card-date">October 17, 2026</span>
+                <a href="#" class="read-link">Read Full Article &rarr;</a>
             </div>
         </div>
 
-        <div class="news-card" data-category="business">
-            <div class="news-content">
-                <span class="news-source">The New York Times</span>
-                <h3 class="news-title">Trump Signs Order Exempting Russia From Sanctions Law</h3>
-                <span class="news-date">10/17/2026, 3:07:11 AM</span>
-                <a href="#" class="read-btn">Read Full Article →</a>
+        <div class="card" data-cat="business">
+            <div class="card-body">
+                <span class="source-tag">The New York Times</span>
+                <h3 class="card-title">Trump Signs Order Exempting Russia From Sanctions Law</h3>
+                <span class="card-date">October 17, 2026</span>
+                <a href="#" class="read-link">Read Full Article &rarr;</a>
             </div>
         </div>
     </div>
 
     <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            if (currentTheme === 'dark') {
-                html.removeAttribute('data-theme');
+        function switchTheme() {
+            const rootHtml = document.documentElement;
+            if (rootHtml.getAttribute('data-theme') === 'dark') {
+                rootHtml.removeAttribute('data-theme');
             } else {
-                html.setAttribute('data-theme', 'dark');
+                rootHtml.setAttribute('data-theme', 'dark');
             }
         }
 
-        function filterNews(category) {
-            const buttons = document.querySelectorAll('.cat-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
+        function filterCategory(cat) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
 
-            const cards = document.querySelectorAll('.news-card');
-            cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
-                    card.style.display = 'flex';
+            const items = document.querySelectorAll('.card');
+            items.forEach(item => {
+                if (cat === 'all' || item.getAttribute('data-cat') === cat) {
+                    item.style.display = 'flex';
                 } else {
-                    card.style.display = 'none';
+                    item.style.display = 'none';
                 }
             });
         }
