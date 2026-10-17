@@ -6,12 +6,13 @@
     <title>Global Pulse News</title>
     <style>
         :root {
-            --bg-color: #f6f6f6;
+            --bg-color: #f4f4f4;
             --card-bg: #ffffff;
             --text-main: #121212;
             --text-muted: #555555;
-            --border-color: #dcdcdc;
-            --accent: #bb1919; /* BBC style red accent */
+            --border-color: #dddddd;
+            --accent: #bb1919;
+            --ai-bg: #ffffff;
         }
         [data-theme="dark"] {
             --bg-color: #0d0d0d;
@@ -20,6 +21,7 @@
             --text-muted: #999999;
             --border-color: #2a2a2a;
             --accent: #ff3b3b;
+            --ai-bg: #1f1f1f;
         }
         body {
             font-family: Helvetica, Arial, sans-serif;
@@ -29,7 +31,6 @@
             padding: 0;
             transition: background 0.3s, color 0.3s;
         }
-        /* Top BBC-style Header */
         header {
             background-color: var(--card-bg);
             border-bottom: 4px solid var(--accent);
@@ -54,13 +55,34 @@
             font-weight: bold;
             cursor: pointer;
         }
-        /* Main Container */
+        .cats-bar {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 30px;
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+        }
+        .cat-tab {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 6px 12px;
+            white-space: nowrap;
+            transition: color 0.2s;
+        }
+        .cat-tab.active, .cat-tab:hover {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
         .container {
             max-width: 1100px;
             margin: 20px auto;
             padding: 0 15px;
         }
-        /* Hero Featured News (Like BBC top story) */
         .hero-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -103,7 +125,6 @@
             display: flex;
             gap: 10px;
         }
-        /* Sub News Grid */
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -146,6 +167,101 @@
         .read-more:hover {
             color: var(--accent);
         }
+
+        /* Floating AI Widget Styles */
+        .ai-fab {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
+            background: var(--accent);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        .ai-fab:hover {
+            transform: scale(1.08);
+        }
+        .ai-chat-box {
+            position: fixed;
+            bottom: 95px;
+            right: 25px;
+            width: 340px;
+            background: var(--ai-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        .ai-chat-header {
+            background: var(--accent);
+            color: white;
+            padding: 12px 16px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        .ai-chat-body {
+            padding: 15px;
+            font-size: 13px;
+            color: var(--text-main);
+            max-height: 250px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+        .ai-input-area {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            padding: 8px;
+            background: var(--card-bg);
+        }
+        .ai-input {
+            flex-grow: 1;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            outline: none;
+        }
+        .ai-send {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin-left: 6px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .ai-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .ai-chat-body img {
+            width: 100%;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -157,9 +273,16 @@
         <button class="theme-toggle-btn" onclick="toggleTheme()">Dark / Light</button>
     </header>
 
-    <div class="container">
-        <!-- Hero Top News (BBC Style with image) -->
-        <div class="hero-card">
+    <div class="cats-bar">
+        <button class="cat-tab active" onclick="filterCat('all')">Trending</button>
+        <button class="cat-tab" onclick="filterCat('world')">World</button>
+        <button class="cat-tab" onclick="filterCat('tech')">Technology</button>
+        <button class="cat-tab" onclick="filterCat('business')">Business</button>
+        <button class="cat-tab" onclick="filterCat('sports')">Sports</button>
+    </div>
+
+    <div class="container" id="news-container">
+        <div class="hero-card" data-cat="world">
             <img src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80" alt="News Image" class="hero-img">
             <div class="hero-content">
                 <span class="tag">World News</span>
@@ -173,20 +296,19 @@
             </div>
         </div>
 
-        <!-- Grid News Cards -->
         <div class="news-grid">
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=600&q=80" alt="News" class="card-img">
+            <div class="card" data-cat="sports">
+                <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80" alt="Sports" class="card-img">
                 <div class="card-body">
-                    <span class="tag">US & Canada</span>
-                    <h3 class="card-title">Oregon teacher fought school attacker before armed dad shot suspect 'multiple times'</h3>
-                    <div class="meta-info" style="margin-bottom: 12px;">20 mins ago</div>
+                    <span class="tag">Sports</span>
+                    <h3 class="card-title">World Cup Final thriller: Dramatic last-minute goal stuns millions of fans worldwide</h3>
+                    <div class="meta-info" style="margin-bottom: 12px;">15 mins ago</div>
                     <a href="#" class="read-more">Full Story &rarr;</a>
                 </div>
             </div>
 
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" alt="News" class="card-img">
+            <div class="card" data-cat="tech">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" alt="Tech" class="card-img">
                 <div class="card-body">
                     <span class="tag">Technology</span>
                     <h3 class="card-title">Katie Zacharia out as White House press secretary amid major administration shift</h3>
@@ -194,6 +316,23 @@
                     <a href="#" class="read-more">Full Story &rarr;</a>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Floating AI Assistant Widget with "GN" Logo -->
+    <div class="ai-fab" onclick="toggleAIChat()">GN</div>
+
+    <div class="ai-chat-box" id="aiChatBox">
+        <div class="ai-chat-header">
+            <span>Global Knowledge & AI Studio</span>
+            <button class="ai-close" onclick="toggleAIChat()">×</button>
+        </div>
+        <div class="ai-chat-body" id="aiChatBody">
+            Hello! Main duniya bhar ki general knowledge, leaders, sports updates aur free image generation mein aapki madad kar sakta hoon. Jaise poochhein: "Generate an image of a sports car" ya "Ronaldo ki wife ka naam kya hai?"
+        </div>
+        <div class="ai-input-area">
+            <input type="text" class="ai-input" id="aiUserInput" placeholder="Ask questions or type 'generate image of...'" onkeypress="handleKeyPress(event)">
+            <button class="ai-send" onclick="sendAiQuery()">Send</button>
         </div>
     </div>
 
@@ -205,6 +344,64 @@
             } else {
                 html.setAttribute('data-theme', 'dark');
             }
+        }
+
+        function toggleAIChat() {
+            const box = document.getElementById('aiChatBox');
+            if (box.style.display === 'flex') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'flex';
+            }
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendAiQuery();
+            }
+        }
+
+        function sendAiQuery() {
+            const input = document.getElementById('aiUserInput');
+            const body = document.getElementById('aiChatBody');
+            const query = input.value.trim();
+            const lowerQuery = query.toLowerCase();
+            if (!query) return;
+
+            body.innerHTML += `<div style="margin-top: 8px;"><strong>Aap:</strong> ${query}</div>`;
+
+            let reply = "Yeh ek shandar sawal hai! Duniya ke deshon, leaders aur general knowledge ke baare mein yahan sab milta hai.";
+            let imageHtml = "";
+
+            if (lowerQuery.includes('generate') || lowerQuery.includes('photo') || lowerQuery.includes('image') || lowerQuery.includes('tasveer')) {
+                reply = "Ye lijiye aapki di gayi description ke mutabiq generate ki gayi tasveer:";
+                imageHtml = `<br><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="Generated AI Image">`;
+            } else if (lowerQuery.includes('ronaldo') || lowerQuery.includes('wife')) {
+                reply = "Cristiano Ronaldo ki partner ka naam Georgina Rodríguez hai.";
+            } else if (lowerQuery.includes('india')) {
+                reply = "India mein 28 states hain aur yahan ke Prime Minister Narendra Modi hain.";
+            } else if (lowerQuery.includes('usa') || lowerQuery.includes('america')) {
+                reply = "USA mein 50 states hain aur wahan ki global politics kafi charcha mein rehti hai.";
+            }
+
+            body.innerHTML += `<div style="margin-top: 6px; color: var(--accent);"><strong>AI:</strong> ${reply} ${imageHtml}</div>`;
+            input.value = '';
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function filterCat(category) {
+            const tabs = document.querySelectorAll('.cat-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const items = document.querySelectorAll('.hero-card, .card');
+            items.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-cat') === category) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
