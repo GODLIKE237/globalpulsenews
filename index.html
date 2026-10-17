@@ -262,6 +262,22 @@
             border-radius: 6px;
             margin-top: 8px;
         }
+        .msg-bubble {
+            margin-bottom: 10px;
+        }
+        .msg-user {
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .msg-ai {
+            color: var(--text-main);
+            background: var(--bg-color);
+            padding: 8px 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -328,10 +344,12 @@
             <button class="ai-close" onclick="toggleAIChat()">×</button>
         </div>
         <div class="ai-chat-body" id="aiChatBody">
-            Hello! Main duniya bhar ki general knowledge, leaders, sports updates aur free image generation mein aapki madad kar sakta hoon. Jaise poochhein: "Generate an image of a sports car" ya "Ronaldo ki wife ka naam kya hai?"
+            <div class="msg-bubble">
+                <div class="msg-ai">Hello! Ask me any global question, country facts, leaders, sports, or type 'generate image of [topic]' for AI images.</div>
+            </div>
         </div>
         <div class="ai-input-area">
-            <input type="text" class="ai-input" id="aiUserInput" placeholder="Ask questions or type 'generate image of...'" onkeypress="handleKeyPress(event)">
+            <input type="text" class="ai-input" id="aiUserInput" placeholder="Ask anything globally..." onkeypress="handleKeyPress(event)">
             <button class="ai-send" onclick="sendAiQuery()">Send</button>
         </div>
     </div>
@@ -368,23 +386,23 @@
             const lowerQuery = query.toLowerCase();
             if (!query) return;
 
-            body.innerHTML += `<div style="margin-top: 8px;"><strong>Aap:</strong> ${query}</div>`;
-
-            let reply = "Yeh ek shandar sawal hai! Duniya ke deshon, leaders aur general knowledge ke baare mein yahan sab milta hai.";
+            let reply = "";
             let imageHtml = "";
 
-            if (lowerQuery.includes('generate') || lowerQuery.includes('photo') || lowerQuery.includes('image') || lowerQuery.includes('tasveer')) {
-                reply = "Ye lijiye aapki di gayi description ke mutabiq generate ki gayi tasveer:";
+            if (lowerQuery.includes('generate') || lowerQuery.includes('photo') || lowerQuery.includes('image')) {
+                reply = "Here is the AI generated image based on your request:";
                 imageHtml = `<br><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="Generated AI Image">`;
-            } else if (lowerQuery.includes('ronaldo') || lowerQuery.includes('wife')) {
-                reply = "Cristiano Ronaldo ki partner ka naam Georgina Rodríguez hai.";
-            } else if (lowerQuery.includes('india')) {
-                reply = "India mein 28 states hain aur yahan ke Prime Minister Narendra Modi hain.";
-            } else if (lowerQuery.includes('usa') || lowerQuery.includes('america')) {
-                reply = "USA mein 50 states hain aur wahan ki global politics kafi charcha mein rehti hai.";
+            } else {
+                reply = `Regarding "${query}", this is a prominent global topic involving international relations, leaders, and worldwide developments. You can explore complete live updates across global sectors right here on Global Pulse.`;
             }
 
-            body.innerHTML += `<div style="margin-top: 6px; color: var(--accent);"><strong>AI:</strong> ${reply} ${imageHtml}</div>`;
+            body.innerHTML += `
+                <div class="msg-bubble">
+                    <div class="msg-user">You: ${query}</div>
+                    <div class="msg-ai">${reply} ${imageHtml}</div>
+                </div>
+            `;
+            
             input.value = '';
             body.scrollTop = body.scrollHeight;
         }
